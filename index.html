@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Questionnaire de départ – Start &amp; Grow Sport</title>
+<style>
+  /* ============================================================
+     Charte Start & Grow : turquoise #4CC3B0, bleu #0F687D / #08526B,
+     fond #E8F4F5, touches sauge. Polices : Poppins (texte), Allura (mot-symbole).
+     Aucune police n'est chargée depuis Google (RGPD) : si Poppins / Allura
+     ne sont pas installées, des polices proches sont utilisées.
+     Pour les avoir partout, place les fichiers .woff2 dans le dépôt
+     et décommente les @font-face ci-dessous.
+     ============================================================ */
+  /*
+  @font-face { font-family: "Poppins"; src: url("fonts/Poppins-Regular.woff2") format("woff2"); font-weight: 400; }
+  @font-face { font-family: "Poppins"; src: url("fonts/Poppins-SemiBold.woff2") format("woff2"); font-weight: 600; }
+  @font-face { font-family: "Allura"; src: url("fonts/Allura-Regular.woff2") format("woff2"); }
+  */
+  :root{
+    --turquoise:#4CC3B0; --bleu:#0F687D; --bleu-fonce:#08526B; --fond:#E8F4F5;
+    --sauge:#9DB8A0; --sauge-clair:#EEF3EC; --texte:#16343B; --gris:#5B7378;
+    --alerte:#B5532E; --alerte-fond:#FBEDE6; --blanc:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--fond); color:var(--texte);
+    font-family:"Poppins","Segoe UI","Helvetica Neue",Arial,sans-serif;
+    font-size:16px; line-height:1.55;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:24px 16px 64px}
+
+  /* En-tête */
+  header.brand{display:flex; align-items:center; gap:16px; margin:8px 0 20px}
+  header.brand svg{width:64px; height:64px; flex:0 0 auto}
+  .wordmark{font-family:"Allura","Brush Script MT","Segoe Script",cursive; font-size:44px; line-height:1; color:var(--bleu)}
+  .wordmark .sport{font-family:"Poppins","Segoe UI",Arial,sans-serif; font-size:15px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--turquoise); margin-left:6px; vertical-align:middle}
+  .baseline{font-size:14px; color:var(--gris); margin-top:4px}
+
+  h1{font-size:24px; color:var(--bleu-fonce); margin:0 0 8px; font-weight:600}
+  .intro{background:var(--blanc); border-radius:16px; padding:20px 22px; margin-bottom:18px; border-left:6px solid var(--turquoise)}
+  .intro p{margin:6px 0}
+  .privacy{font-size:14px; color:var(--gris)}
+
+  /* Barre de progression */
+  .progress{position:sticky; top:0; z-index:5; background:var(--fond); padding:10px 0 8px}
+  .progress-bar{height:8px; background:#cfe6e8; border-radius:99px; overflow:hidden}
+  .progress-bar span{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--turquoise),var(--bleu)); transition:width .3s}
+  .progress-label{font-size:13px; color:var(--gris); margin-top:4px}
+
+  /* Sections */
+  fieldset{border:0; background:var(--blanc); border-radius:16px; padding:20px 22px 8px; margin:0 0 18px}
+  legend{float:left; width:100%; padding:0; margin-bottom:12px; font-size:19px; font-weight:600; color:var(--bleu)}
+  legend .num{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:var(--turquoise); color:var(--blanc); font-size:15px; margin-right:10px}
+  .section-intro{clear:both; font-size:14px; color:var(--gris); margin:0 0 14px}
+
+  .q{clear:both; margin:0 0 18px}
+  .q.hidden{display:none}
+  .q > label, .q > .qlabel{display:block; font-weight:600; margin-bottom:6px}
+  .qn{color:var(--turquoise); margin-right:4px}
+  .req{color:var(--alerte); margin-left:2px}
+  .hint{font-size:13px; color:var(--gris); font-weight:400}
+
+  select, input[type=text], input[type=email], input[type=number], textarea{
+    width:100%; font:inherit; color:var(--texte); background:var(--blanc);
+    border:1.5px solid #bcd9dc; border-radius:10px; padding:10px 12px;
+  }
+  select{appearance:none; -webkit-appearance:none; padding-right:40px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%230F687D' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center}
+  textarea{min-height:84px; resize:vertical}
+  select:focus, input:focus, textarea:focus{outline:none; border-color:var(--turquoise); box-shadow:0 0 0 3px rgba(76,195,176,.25)}
+  .invalid select, .invalid input, .invalid textarea{border-color:var(--alerte)}
+  .err{display:none; color:var(--alerte); font-size:13px; margin-top:4px}
+  .invalid .err{display:block}
+
+  .checks{display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:8px}
+  .checks label{display:flex; align-items:center; gap:8px; background:var(--sauge-clair); border-radius:10px; padding:8px 10px; font-weight:400; cursor:pointer}
+  .checks input{accent-color:var(--bleu); width:18px; height:18px}
+  .consent label{display:flex; gap:10px; align-items:flex-start; font-weight:400}
+  .consent input{accent-color:var(--bleu); width:20px; height:20px; margin-top:3px; flex:0 0 auto}
+
+  .alert{display:none; background:var(--alerte-fond); border-left:5px solid var(--alerte); border-radius:10px; padding:12px 14px; margin:4px 0 18px; font-size:15px}
+  .alert.show{display:block}
+  .note{background:var(--sauge-clair); border-left:5px solid var(--sauge); border-radius:10px; padding:10px 14px; font-size:14px; margin-top:8px}
+
+  /* Boutons */
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font:inherit; font-weight:600; border:0; border-radius:99px; padding:13px 24px; cursor:pointer; text-decoration:none; transition:transform .1s, background .2s}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--bleu); color:var(--blanc)}
+  .btn-primary:hover{background:var(--bleu-fonce)}
+  .btn-accent{background:var(--turquoise); color:var(--bleu-fonce)}
+  .btn-ghost{background:transparent; color:var(--bleu); border:1.5px solid var(--bleu)}
+  .actions{text-align:center; margin-top:8px}
+
+  /* Récapitulatif */
+  #recap{display:none}
+  #recap.show{display:block}
+  .steps{background:var(--blanc); border-radius:16px; padding:20px 22px; margin-bottom:18px}
+  .step{display:flex; gap:14px; align-items:flex-start; margin:12px 0}
+  .step .num{flex:0 0 auto; width:32px; height:32px; border-radius:50%; background:var(--turquoise); color:var(--blanc); display:flex; align-items:center; justify-content:center; font-weight:600}
+  .step p{margin:2px 0 8px}
+  .doc{background:var(--blanc); border-radius:16px; padding:24px}
+  .doc-head{display:flex; align-items:center; gap:14px; border-bottom:2px solid var(--turquoise); padding-bottom:12px; margin-bottom:12px}
+  .doc-head svg{width:48px; height:48px}
+  .doc-head .wordmark{font-size:34px}
+  .doc-meta{font-size:13px; color:var(--gris)}
+  .doc h2{font-size:16px; color:var(--blanc); background:var(--bleu); border-radius:8px; padding:6px 12px; margin:18px 0 6px}
+  .doc table{width:100%; border-collapse:collapse; font-size:14px}
+  .doc td{padding:6px 8px; border-bottom:1px solid #dcebec; vertical-align:top}
+  .doc td.k{width:55%; color:var(--gris)}
+  .doc td.v{font-weight:600}
+  .doc .alert{display:block}
+  .doc-foot{font-size:12px; color:var(--gris); margin-top:18px; border-top:1px solid #dcebec; padding-top:10px}
+
+  footer{font-size:13px; color:var(--gris); text-align:center; margin-top:28px}
+  footer em{font-style:italic}
+
+  @media (max-width:520px){
+    .wordmark{font-size:36px}
+    fieldset, .intro, .steps, .doc{padding:16px}
+    .doc td.k{width:50%}
+  }
+
+  /* Impression / PDF : seul le document récapitulatif est imprimé */
+  @media print{
+    @page{size:A4; margin:14mm}
+    body{background:#fff; font-size:11pt}
+    .wrap{max-width:none; padding:0}
+    .no-print{display:none !important}
+    #recap{display:block !important}
+    .doc{padding:0; border-radius:0}
+    .doc h2{-webkit-print-color-adjust:exact; print-color-adjust:exact; break-after:avoid}
+    .doc tr{break-inside:avoid}
+    .doc .alert{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Emblème Start & Grow : jeune pousse dans deux arcs (réutilisé plus bas) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="emblem" viewBox="0 0 64 64">
+      <path d="M7 48 A25 25 0 0 1 57 48" fill="none" stroke="#4CC3B0" stroke-width="4" stroke-linecap="round"/>
+      <path d="M15 48 A17 17 0 0 1 49 48" fill="none" stroke="#0F687D" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M32 50 V31" fill="none" stroke="#0F687D" stroke-width="3" stroke-linecap="round"/>
+      <path d="M32 39 C25.5 38 21.5 32.5 22 26.5 C28.5 27 32.5 32 32 39 Z" fill="#4CC3B0"/>
+      <path d="M32 34 C37.5 33 41.5 28 41.5 22 C35.5 22.5 31.5 27.5 32 34 Z" fill="#9DB8A0"/>
+      <path d="M10 52 H54" stroke="#0F687D" stroke-width="2.5" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
+  <!-- ============ FORMULAIRE ============ -->
+  <div id="formView" class="no-print">
+    <header class="brand">
+      <svg role="img" aria-label="Emblème Start &amp; Grow"><use href="#emblem"/></svg>
+      <div>
+        <div class="wordmark">Start &amp; Grow<span class="sport">Sport</span></div>
+        <div class="baseline">Lancer &amp; Réussir</div>
+      </div>
+    </header>
+
+    <div class="intro">
+      <h1>Questionnaire de départ</h1>
+      <p>Ce questionnaire me permet de construire un programme adapté à toi : ton niveau, tes objectifs, ton temps disponible et ta santé. Il prend environ <strong>10 minutes</strong>.</p>
+      <p>À la fin, tu enregistres tes réponses en <strong>PDF</strong> et tu me les envoies par email.</p>
+      <p class="privacy">🔒 Tes réponses ne sont envoyées nulle part automatiquement et ne sont pas enregistrées sur ce site : elles restent sur ton appareil jusqu'à ce que tu m'envoies ton PDF. Les champs marqués <span class="req">*</span> sont obligatoires.</p>
+    </div>
+
+    <div class="progress" aria-hidden="true">
+      <div class="progress-bar"><span id="progressFill"></span></div>
+      <div class="progress-label" id="progressLabel">0 % complété</div>
+    </div>
+
+    <form id="form" novalidate></form>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" id="btnRecap">Voir mon récapitulatif →</button>
+    </div>
+  </div>
+
+  <!-- ============ RÉCAPITULATIF ============ -->
+  <div id="recap">
+    <div class="steps no-print">
+      <h1>Merci ! Encore deux étapes 🌱</h1>
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <p><strong>Enregistre tes réponses en PDF.</strong><br>
+          <span class="hint">Dans la fenêtre qui s'ouvre, choisis « Enregistrer au format PDF » comme imprimante. Sur iPhone : touche l'icône Partager, puis « Enregistrer dans Fichiers ».</span></p>
+          <button type="button" class="btn btn-accent" id="btnPdf">📄 Enregistrer en PDF</button>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <p><strong>Envoie-moi ton PDF par email.</strong><br>
+          <span class="hint">Le bouton ouvre ta messagerie avec un message prêt. <strong>Pense à joindre le fichier PDF</strong> avant d'envoyer : il ne s'ajoute pas tout seul.</span></p>
+          <a class="btn btn-primary" id="btnMail" href="#">✉️ Préparer l'email</a>
+          <p class="hint" id="mailFallback"></p>
+        </div>
+      </div>
+      <p><button type="button" class="btn btn-ghost" id="btnEdit">← Modifier mes réponses</button></p>
+    </div>
+
+    <div class="doc" id="doc"></div>
+  </div>
+
+  <footer class="no-print">
+    <em>Vendre de l'inspiration, pas du rêve.</em><br>
+    Start &amp; Grow Sport
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURATION : à adapter avant la mise en ligne
+   ============================================================ */
+const CONFIG = {
+  emailCoach: "ton-adresse@exemple.com",      // adresse qui reçoit les PDF
+  nomResponsable: "Start & Grow Sport",       // responsable du traitement (nom ou société)
+  dureeConservation: "12 mois après la fin du suivi" // durée de conservation des données
+};
+
+/* ============================================================
+   CONTENU DU QUESTIONNAIRE
+   type : select | multi | text | email | number | textarea | consent
+   ============================================================ */
+const OUI_NON = ["Oui", "Non"];
+const OBJECTIFS = ["Gagner du muscle","Perdre du gras","Gagner en force","Améliorer la condition physique générale","Réduire des douleurs, mieux bouger","Préparer un sport ou une compétition","Santé et bien-être"];
+
+const SECTIONS = [
+  { titre: "Consentement", questions: [
+    { id:"consent", type:"consent", required:true,
+      label: () => `J'accepte que mes réponses, y compris mes informations de santé, soient utilisées par ${CONFIG.nomResponsable} uniquement pour créer mon programme d'entraînement. Elles seront supprimées ${CONFIG.dureeConservation}. Je peux demander à tout moment à les consulter, les corriger ou les supprimer.` }
+  ]},
+  { titre: "Informations générales", questions: [
+    { id:"prenom", label:"Prénom", type:"text", required:true },
+    { id:"email", label:"Email", type:"email", required:true },
+    { id:"age", label:"Âge", type:"select", required:true, options:["Moins de 18 ans","18-24","25-34","35-44","45-54","55-64","65 et plus"] },
+    { id:"tuteur", sub:true, label:"Nom du parent ou tuteur qui donne son accord", type:"text", required:true,
+      showIf: a => a.age === "Moins de 18 ans",
+      note:"Tu as moins de 18 ans : un parent ou tuteur doit donner son accord pour que tu commences le programme." },
+    { id:"sexe", label:"Sexe", type:"select", required:true, options:["Femme","Homme","Je préfère ne pas répondre"] },
+    { id:"taille", label:"Taille (cm)", type:"number", min:100, max:230 },
+    { id:"poids", label:"Poids actuel (kg)", type:"number", min:30, max:250 },
+    { id:"profession", label:"Ton activité professionnelle", type:"select", options:["Assis la plupart du temps","Debout ou en mouvement","Travail physique","Sans emploi, étudiant, retraité"] }
+  ]},
+  { titre: "Santé et sécurité",
+    intro: "Ces 7 premières questions reprennent les thèmes du PAR-Q+, le questionnaire de référence avant de commencer une activité physique. Réponds honnêtement : c'est pour ta sécurité.",
+    questions: [
+    { id:"p1", parq:true, label:"Un médecin t'a-t-il déjà dit que tu as un problème cardiaque ou de l'hypertension ?", type:"select", required:true, options:OUI_NON },
+    { id:"p2", parq:true, label:"Ressens-tu une douleur à la poitrine au repos, au quotidien ou pendant l'effort ?", type:"select", required:true, options:OUI_NON },
+    { id:"p3", parq:true, label:"Au cours des 12 derniers mois, as-tu perdu l'équilibre à cause d'un vertige, ou perdu connaissance ?", type:"select", required:true, options:OUI_NON },
+    { id:"p4", parq:true, label:"As-tu une autre maladie chronique diagnostiquée ?", type:"select", required:true, options:OUI_NON },
+    { id:"p5", parq:true, label:"Prends-tu actuellement des médicaments prescrits pour une maladie chronique ?", type:"select", required:true, options:OUI_NON },
+    { id:"p6", parq:true, label:"As-tu (ou as-tu eu ces 12 derniers mois) un problème d'os, d'articulation ou de muscle qui pourrait s'aggraver avec l'activité physique ?", type:"select", required:true, options:OUI_NON },
+    { id:"p7", parq:true, label:"Un médecin t'a-t-il dit de ne faire de l'activité physique que sous surveillance médicale ?", type:"select", required:true, options:OUI_NON },
+    { id:"zones", label:"Zones douloureuses ou blessées actuellement", type:"multi", hint:"plusieurs choix possibles",
+      options:["Aucune","Nuque","Épaule","Coude","Poignet","Haut du dos","Bas du dos","Hanche","Genou","Cheville","Autre"], exclusive:"Aucune" },
+    { id:"douleur", label:"Intensité de cette douleur au quotidien", type:"select", options:["Légère","Modérée","Forte"],
+      showIf: a => Array.isArray(a.zones) && a.zones.length > 0 && !a.zones.includes("Aucune") },
+    { id:"blessures", label:"Blessures ou opérations passées à signaler", type:"textarea" },
+    { id:"grossesse", label:"Es-tu enceinte ou as-tu accouché ces 12 derniers mois ?", type:"select",
+      options:["Non","Enceinte","Post-partum (accouchement ces 12 derniers mois)","Je préfère ne pas répondre"],
+      showIf: a => a.sexe === "Femme" },
+    { id:"accordMedical", label:"As-tu un accord médical pour pratiquer ?", type:"select", options:["Oui","Non","Pas nécessaire selon moi"] }
+  ]},
+  { titre: "Objectifs", questions: [
+    { id:"objectif1", label:"Objectif principal", type:"select", required:true, options:OBJECTIFS },
+    { id:"objectif2", label:"Objectif secondaire", type:"select", options:["Aucun", ...OBJECTIFS] },
+    { id:"delai", label:"Délai visé", type:"select", options:["1-3 mois","3-6 mois","6-12 mois","Pas de délai"] },
+    { id:"motivation", label:"Ta motivation sur 10", type:"select", options:["1","2","3","4","5","6","7","8","9","10"] },
+    { id:"arret", label:"Qu'est-ce qui t'a fait arrêter par le passé ?", type:"select",
+      options:["Manque de temps","Manque de résultats","Blessure","Ennui","Manque de motivation","Je n'ai jamais commencé","Autre"] }
+  ]},
+  { titre: "Expérience", questions: [
+    { id:"freqActuelle", label:"Activité physique actuelle", type:"select", required:true, options:["Aucune","Moins d'1 fois par semaine","1-2 fois par semaine","3-4 fois par semaine","5 fois ou plus par semaine"] },
+    { id:"typeActivite", label:"Type d'activité actuelle", type:"multi", hint:"plusieurs choix possibles",
+      options:["Aucune","Course, vélo, natation","Sport collectif","CrossFit, cross-training","Musculation","Yoga, Pilates","Marche","Autre"], exclusive:"Aucune" },
+    { id:"experience", label:"Expérience en musculation", type:"select", required:true, options:["Jamais","Moins de 6 mois","6 mois à 2 ans","2 à 5 ans","Plus de 5 ans"] },
+    { id:"derniereFois", label:"Dernière période d'entraînement régulier", type:"select", options:["En cours","Il y a moins de 3 mois","Il y a 3 à 12 mois","Il y a plus d'un an","Jamais"] },
+    { id:"technique", label:"Connais-tu ces mouvements : squat, soulevé de terre, développé couché, développé militaire, rowing, tractions ?", type:"select",
+      options:["Je ne les connais pas","Je les connais mais ne maîtrise pas la technique","Je maîtrise la plupart","Je maîtrise tout"] },
+    { id:"pompes", label:"Pompes d'affilée, avec une bonne technique", type:"select", options:["0","1-5","6-15","16-30","Plus de 30","Je ne sais pas"] },
+    { id:"gainage", label:"Gainage planche (ventral)", type:"select", options:["Moins de 20 s","20-45 s","45 s à 1 min 30","Plus de 1 min 30","Je ne sais pas"] },
+    { id:"squatPdc", label:"Squat au poids du corps sans douleur, cuisses parallèles au sol", type:"select", options:["Oui, facilement","Oui, avec difficulté","Non","Je ne sais pas"] }
+  ]},
+  { titre: "Disponibilités", questions: [
+    { id:"seances", label:"Séances par semaine", type:"select", required:true, options:["1","2","3","4","5 ou plus"] },
+    { id:"duree", label:"Durée d'une séance", type:"select", required:true, options:["30 min","45 min","60 min","75 min","90 min"] },
+    { id:"jours", label:"Jours possibles", type:"multi", hint:"plusieurs choix possibles", options:["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"] },
+    { id:"moment", label:"Moment préféré", type:"select", options:["Tôt le matin","Midi","Fin d'après-midi","Soir","Variable"] }
+  ]},
+  { titre: "Lieu et matériel", questions: [
+    { id:"lieu", label:"Lieu d'entraînement", type:"select", required:true, options:["Salle de sport","Box CrossFit","Maison","Extérieur","Un mélange"] },
+    { id:"materiel", label:"Matériel disponible", type:"multi", hint:"plusieurs choix possibles",
+      options:["Machines guidées","Barre et disques","Rack à squat","Haltères","Kettlebells","Élastiques","Barre de traction","Banc","Matériel cardio","Rien"], exclusive:"Rien" }
+  ]},
+  { titre: "Préférences", questions: [
+    { id:"aime", label:"Exercices que tu aimes", type:"textarea" },
+    { id:"evite", label:"Exercices que tu veux éviter", type:"textarea" },
+    { id:"cardio", label:"Inclure du cardio ?", type:"select", options:["Non","Un peu","Oui, régulièrement"] },
+    { id:"suivi", label:"Type de suivi souhaité", type:"select", options:["Programme seul","Programme + suivi à distance","Séances encadrées en présentiel","Je ne sais pas encore"] },
+    { id:"remarques", label:"Autre chose à me dire ?", type:"textarea" }
+  ]}
+];
+
+/* ============================================================
+   CONSTRUCTION DU FORMULAIRE
+   ============================================================ */
+const form = document.getElementById("form");
+const ALL = [];   // toutes les questions, à plat
+let numero = 0;
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function labelText(q){ return typeof q.label === "function" ? q.label() : q.label; }
+
+SECTIONS.forEach((sec, si) => {
+  const fs = document.createElement("fieldset");
+  fs.innerHTML = `<legend><span class="num">${si}</span>${esc(sec.titre)}</legend>` +
+                 (sec.intro ? `<p class="section-intro">${esc(sec.intro)}</p>` : "");
+  sec.questions.forEach(q => {
+    q.section = sec.titre;
+    if (q.type !== "consent" && !q.sub) q.n = ++numero;
+    ALL.push(q);
+    const div = document.createElement("div");
+    div.className = "q";
+    div.id = "q_" + q.id;
+    const star = q.required ? '<span class="req">*</span>' : "";
+    const num = q.n ? `<span class="qn">${q.n}.</span>` : "";
+    const hint = q.hint ? ` <span class="hint">(${esc(q.hint)})</span>` : "";
+    let html = "";
+    switch (q.type) {
+      case "consent":
+        div.classList.add("consent");
+        html = `<label><input type="checkbox" name="${q.id}" id="f_${q.id}"> <span>${esc(labelText(q))} ${star}</span></label>`;
+        break;
+      case "select":
+        html = `<label for="f_${q.id}">${num}${esc(labelText(q))} ${star}</label>
+                <select id="f_${q.id}" name="${q.id}"><option value="">— Choisir —</option>
+                ${q.options.map(o => `<option>${esc(o)}</option>`).join("")}</select>`;
+        break;
+      case "multi":
+        html = `<div class="qlabel">${num}${esc(labelText(q))}${hint} ${star}</div><div class="checks">` +
+               q.options.map(o => `<label><input type="checkbox" name="${q.id}" value="${esc(o)}"> ${esc(o)}</label>`).join("") + `</div>`;
+        break;
+      case "textarea":
+        html = `<label for="f_${q.id}">${num}${esc(labelText(q))} <span class="hint">(texte libre)</span> ${star}</label>
+                <textarea id="f_${q.id}" name="${q.id}" maxlength="1500"></textarea>`;
+        break;
+      default: {
+        const extra = q.type === "number" ? ` inputmode="numeric" min="${q.min}" max="${q.max}" step="1"` : "";
+        const ac = q.id === "prenom" ? ' autocomplete="given-name"' : q.id === "email" ? ' autocomplete="email"' : "";
+        html = `<label for="f_${q.id}">${num}${esc(labelText(q))} ${star}</label>
+                <input type="${q.type}" id="f_${q.id}" name="${q.id}"${extra}${ac} maxlength="200">`;
+      }
+    }
+    if (q.note) html += `<div class="note">${esc(q.note)}</div>`;
+    html += `<div class="err">Merci de répondre à cette question.</div>`;
+    div.innerHTML = html;
+    fs.appendChild(div);
+  });
+  if (sec.titre === "Santé et sécurité") {
+    // alerte affichée en direct si une réponse PAR-Q est "Oui"
+    const al = document.createElement("div");
+    al.className = "alert"; al.id = "parqAlert";
+    al.innerHTML = "<strong>Important :</strong> tu as répondu « Oui » à au moins une des 7 premières questions. Merci de consulter ton médecin avant de commencer. Je te contacterai avant de construire ton programme.";
+    fs.insertBefore(al, fs.querySelector("#q_zones"));
+  }
+  form.appendChild(fs);
+});
+
+/* ============================================================
+   LECTURE DES RÉPONSES, CONDITIONS, PROGRESSION
+   ============================================================ */
+function getAnswers(){
+  const a = {};
+  ALL.forEach(q => {
+    if (q.type === "multi") {
+      a[q.id] = [...form.querySelectorAll(`input[name="${q.id}"]:checked`)].map(i => i.value);
+    } else if (q.type === "consent") {
+      a[q.id] = form.querySelector(`#f_${q.id}`).checked;
+    } else {
+      a[q.id] = form.querySelector(`#f_${q.id}`).value.trim();
+    }
+  });
+  return a;
+}
+function isVisible(q, a){ return !q.showIf || q.showIf(a); }
+function isAnswered(q, a){
+  const v = a[q.id];
+  if (q.type === "multi") return v.length > 0;
+  if (q.type === "consent") return v === true;
+  return v !== "";
+}
+function parqYes(a){ return ALL.some(q => q.parq && a[q.id] === "Oui"); }
+
+function refresh(){
+  const a = getAnswers();
+  ALL.forEach(q => {
+    const el = document.getElementById("q_" + q.id);
+    el.classList.toggle("hidden", !isVisible(q, a));
+    if (isAnswered(q, a)) el.classList.remove("invalid");
+  });
+  document.getElementById("parqAlert").classList.toggle("show", parqYes(a));
+  const visibles = ALL.filter(q => isVisible(q, a));
+  const done = visibles.filter(q => isAnswered(q, a)).length;
+  const pct = Math.round(done / visibles.length * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = pct + " % complété";
+}
+
+// cases "Aucune" / "Rien" exclusives
+form.addEventListener("change", e => {
+  const t = e.target;
+  if (t.type === "checkbox" && t.name) {
+    const q = ALL.find(x => x.id === t.name);
+    if (q && q.exclusive && t.checked) {
+      form.querySelectorAll(`input[name="${q.id}"]`).forEach(i => {
+        if (t.value === q.exclusive ? i !== t : i.value === q.exclusive) i.checked = false;
+      });
+    }
+  }
+  refresh();
+});
+form.addEventListener("input", refresh);
+
+/* ============================================================
+   VALIDATION ET RÉCAPITULATIF
+   ============================================================ */
+function validate(a){
+  let first = null;
+  ALL.forEach(q => {
+    const el = document.getElementById("q_" + q.id);
+    let ok = true;
+    if (isVisible(q, a)) {
+      if (q.required && !isAnswered(q, a)) ok = false;
+      if (ok && q.type === "email" && a[q.id] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a[q.id])) ok = false;
+      if (ok && q.type === "number" && a[q.id]) {
+        const n = Number(a[q.id]);
+        if (isNaN(n) || n < q.min || n > q.max) ok = false;
+      }
+    }
+    el.classList.toggle("invalid", !ok);
+    if (!ok && !first) first = el;
+  });
+  if (first) first.scrollIntoView({ behavior: "smooth", block: "center" });
+  return !first;
+}
+
+function dateFr(){ return new Date().toLocaleDateString("fr-BE", { day:"2-digit", month:"long", year:"numeric" }); }
+
+function buildRecap(a){
+  let html = `
+    <div class="doc-head">
+      <svg aria-hidden="true"><use href="#emblem"/></svg>
+      <div>
+        <div class="wordmark">Start &amp; Grow<span class="sport">Sport</span></div>
+        <div class="doc-meta">Questionnaire de départ · ${esc(a.prenom)} · rempli le ${esc(dateFr())}</div>
+      </div>
+    </div>`;
+  if (parqYes(a)) {
+    html += `<div class="alert"><strong>À vérifier avant de commencer :</strong> au moins une réponse « Oui » aux questions de santé 8 à 14 (PAR-Q+). Avis médical recommandé.</div>`;
+  }
+  SECTIONS.forEach(sec => {
+    if (sec.titre === "Consentement") return;
+    const rows = sec.questions.filter(q => isVisible(q, a)).map(q => {
+      let v = a[q.id];
+      if (Array.isArray(v)) v = v.join(", ");
+      const unit = q.id === "taille" && v ? " cm" : q.id === "poids" && v ? " kg" : "";
+      return `<tr><td class="k">${q.n ? q.n + ". " : "↳ "}${esc(labelText(q))}</td><td class="v">${v ? esc(v) + unit : "—"}</td></tr>`;
+    }).join("");
+    html += `<h2>${esc(sec.titre)}</h2><table>${rows}</table>`;
+  });
+  html += `<div class="doc-foot">Consentement donné le ${esc(dateFr())} : les réponses, y compris les informations de santé, sont utilisées par ${esc(CONFIG.nomResponsable)} uniquement pour créer le programme d'entraînement, et supprimées ${esc(CONFIG.dureeConservation)}.</div>`;
+  document.getElementById("doc").innerHTML = html;
+
+  // email pré-rempli (sans les réponses : elles sont dans le PDF joint)
+  const sujet = `Questionnaire de départ Start & Grow Sport – ${a.prenom}`;
+  const corps = `Bonjour,\n\nVoici mon questionnaire de départ en pièce jointe (PDF).\n\n${a.prenom}`;
+  document.getElementById("btnMail").href =
+    `mailto:${CONFIG.emailCoach}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
+  document.getElementById("mailFallback").innerHTML =
+    `Si ta messagerie ne s'ouvre pas, envoie le PDF à : <strong>${esc(CONFIG.emailCoach)}</strong>`;
+}
+
+document.getElementById("btnRecap").addEventListener("click", () => {
+  const a = getAnswers();
+  if (!validate(a)) return;
+  buildRecap(a);
+  document.getElementById("formView").style.display = "none";
+  document.getElementById("recap").classList.add("show");
+  window.scrollTo({ top: 0 });
+});
+
+document.getElementById("btnEdit").addEventListener("click", () => {
+  document.getElementById("recap").classList.remove("show");
+  document.getElementById("formView").style.display = "";
+  window.scrollTo({ top: 0 });
+});
+
+document.getElementById("btnPdf").addEventListener("click", () => {
+  // le titre de la page devient le nom proposé pour le fichier PDF
+  const a = getAnswers();
+  const ancien = document.title;
+  const prenom = a.prenom.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9-]/g, "");
+  const d = new Date();
+  const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  document.title = `Questionnaire-StartGrow-Sport-${prenom || "client"}-${iso}`;
+  window.print();
+  setTimeout(() => { document.title = ancien; }, 1000);
+});
+
+// avertissement si on quitte la page en cours de saisie
+let dirty = false;
+form.addEventListener("input", () => { dirty = true; });
+form.addEventListener("change", () => { dirty = true; });
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+refresh();
+</script>
+</body>
+</html>
